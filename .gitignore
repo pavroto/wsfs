@@ -1,5 +1,5 @@
 # Build
-src/tntouch
+src/wsfs
 *.tar.gz
 
 # Prerequisites
