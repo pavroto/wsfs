@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef _LOGLEVELS
 #define _LOGLEVELS
 

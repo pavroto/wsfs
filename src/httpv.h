@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef _HTTPV
 #define _HTTPV
 

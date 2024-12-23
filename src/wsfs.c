@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include <getopt.h>
 #include <limits.h>
 #include <netinet/in.h>
