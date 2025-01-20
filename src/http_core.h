@@ -144,11 +144,13 @@ struct http_respone
     char name[HTTP_HEADERS_LENGTH_MAX];
     char key[HTTP_HEADERS_LENGTH_MAX];
   } response_headers[HTTP_HEADERS_MAX];
+  size_t response_header_count;
 
   struct {
     char name[HTTP_HEADERS_LENGTH_MAX];
     char key[HTTP_HEADERS_LENGTH_MAX];
   } representation_headers[HTTP_HEADERS_MAX];
+  size_t representation_header_count;
 
   char body[HTTP_BODY_LENGTH_MAX];
 };
