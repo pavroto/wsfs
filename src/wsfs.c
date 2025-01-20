@@ -13,8 +13,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "http.h"
-#include "loglevels.h"
+#include "http_core.h"
+#include "http_utils.h"
+#include "log_levels.h"
 
 #define DEF_PORT 8080
 #define OPTION_ERROR 1
