@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-#ifndef _HTTP
-#define _HTTP
+#ifndef _HTTP_CORE
+#define _HTTP_CORE
 
 #define HTTP10 10 // HTTP 1.0
 #define HTTP11 11 // HTTP 1.1
@@ -113,15 +113,44 @@
 #define CRIT_NETWORK_READ_TIMEOUT_ERROR 598
 #define CRIT_NETWORK_CONNECT_TIMEOUT_ERROR 599
 
+#define HTTP_PATH_MAX 4096
+#define HTTP_HEADERS_MAX 20
+#define HTTP_HEADERS_LENGTH_MAX 256
+#define HTTP_BODY_LENGTH_MAX 8192
+#define HTTP_STATUS_STRING_LENGTH_MAX 256
+
 struct http_request
 {
   int version;
   int method;
-  char path[];
+  char path[HTTP_PATH_MAX];
+
+  struct {
+    char name[HTTP_HEADERS_LENGTH_MAX];
+    char key[HTTP_HEADERS_LENGTH_MAX];
+  } headers[HTTP_HEADERS_MAX];
+  size_t header_count;
+
+  char body[HTTP_BODY_LENGTH_MAX];
 };
 
 struct http_respone
 {
+  int version;
+  int status;
+  char status_string[HTTP_STATUS_STRING_LENGTH_MAX];
+
+  struct {
+    char name[HTTP_HEADERS_LENGTH_MAX];
+    char key[HTTP_HEADERS_LENGTH_MAX];
+  } response_headers[HTTP_HEADERS_MAX];
+
+  struct {
+    char name[HTTP_HEADERS_LENGTH_MAX];
+    char key[HTTP_HEADERS_LENGTH_MAX];
+  } representation_headers[HTTP_HEADERS_MAX];
+
+  char body[HTTP_BODY_LENGTH_MAX];
 };
 
 #endif
