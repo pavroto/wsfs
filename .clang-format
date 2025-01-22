@@ -13,8 +13,8 @@ ContinuationIndentWidth: 16
 ColumnLimit: 0
 Cpp11BracedListStyle: false
 IndentCaseLabels: false
-IndentWidth: 8
+IndentWidth: 2
 KeepEmptyLinesAtTheStartOfBlocks: false
 ReflowComments: false
 SpacesInContainerLiterals: false
-UseTab: Always
+UseTab: Never
