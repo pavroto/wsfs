@@ -220,37 +220,37 @@
 #define HTTP_STATUS_STRING_LENGTH_MAX 128
 
 struct http_request {
-	int version;
-	int method;
-	char path[HTTP_PATH_MAX];
+  int version;
+  int method;
+  char path[HTTP_PATH_MAX];
 
-	struct {
-		char name[HTTP_HEADERS_LENGTH_MAX];
-		char key[HTTP_HEADERS_LENGTH_MAX];
-	} headers[HTTP_HEADERS_MAX];
-	size_t header_count;
+  struct {
+    char name[HTTP_HEADERS_LENGTH_MAX];
+    char key[HTTP_HEADERS_LENGTH_MAX];
+  } headers[HTTP_HEADERS_MAX];
+  size_t header_count;
 
-	char body[HTTP_BODY_LENGTH_MAX];
+  char body[HTTP_BODY_LENGTH_MAX];
 };
 
 struct http_respone {
-	int version;
-	int status;
-	char status_string[HTTP_STATUS_STRING_LENGTH_MAX];
+  int version;
+  int status;
+  char status_string[HTTP_STATUS_STRING_LENGTH_MAX];
 
-	struct {
-		char name[HTTP_HEADERS_LENGTH_MAX];
-		char key[HTTP_HEADERS_LENGTH_MAX];
-	} response_headers[HTTP_HEADERS_MAX];
-	size_t response_header_count;
+  struct {
+    char name[HTTP_HEADERS_LENGTH_MAX];
+    char key[HTTP_HEADERS_LENGTH_MAX];
+  } response_headers[HTTP_HEADERS_MAX];
+  size_t response_header_count;
 
-	struct {
-		char name[HTTP_HEADERS_LENGTH_MAX];
-		char key[HTTP_HEADERS_LENGTH_MAX];
-	} representation_headers[HTTP_HEADERS_MAX];
-	size_t representation_header_count;
+  struct {
+    char name[HTTP_HEADERS_LENGTH_MAX];
+    char key[HTTP_HEADERS_LENGTH_MAX];
+  } representation_headers[HTTP_HEADERS_MAX];
+  size_t representation_header_count;
 
-	char body[HTTP_BODY_LENGTH_MAX];
+  char body[HTTP_BODY_LENGTH_MAX];
 };
 
 #endif
