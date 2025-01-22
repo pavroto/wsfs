@@ -9,7 +9,7 @@ AlwaysBreakAfterReturnType: AllDefinitions
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Linux
 BreakStringLiterals: false
-ContinuationIndentWidth: 16
+ContinuationIndentWidth: 2
 ColumnLimit: 0
 Cpp11BracedListStyle: false
 IndentCaseLabels: false
