@@ -134,28 +134,28 @@ main(int argc, char *argv[])
     switch (c) {
     case OPT_LOG_LEVEL:
       check(handle_log_level(&log_level, optarg),
-                      "log-level argument is invalid. Use --help flag to see "
-                      "available options.\n");
+        "log-level argument is invalid. Use --help flag to see "
+        "available options.\n");
       break;
     case OPT_LOG_OUTPUT:
       check(handle_log_output(log_output, optarg),
-                      "wsfs: --log-output fail.\n");
+        "wsfs: --log-output fail.\n");
       break;
     case OPT_INET4_SOURCE:
       check(handle_sin4_addr(&sin4_addr, optarg),
-                      "wsfs: --source4 fail.\n");
+        "wsfs: --source4 fail.\n");
       break;
     case OPT_INET6_SOURCE:
       check(handle_sin6_addr(&sin6_addr, optarg),
-                      "wsfs: --source6 fail.\n");
+        "wsfs: --source6 fail.\n");
       break;
     case OPT_INET4_PORT:
       check(handle_sin_port(&sin4_port, optarg),
-                      "wsfs: --port4 fail.\n");
+        "wsfs: --port4 fail.\n");
       break;
     case OPT_INET6_PORT:
       check(handle_sin_port(&sin6_port, optarg),
-                      "wsfs: --port6 fail.\n");
+        "wsfs: --port6 fail.\n");
       break;
     case OPT_TARGET:
       check(handle_target(target, optarg), "wsfs: --target fail.\n");
@@ -182,7 +182,7 @@ main(int argc, char *argv[])
   }
 
   check(sin4_only_flag && sin6_only_flag,
-                  "--only4 argument conflicts with --only6 argument\n");
+    "--only4 argument conflicts with --only6 argument\n");
 
   if (sin4_only_flag)
     mode ^= IPV6;
@@ -206,9 +206,9 @@ main(int argc, char *argv[])
     printf("Hello!\n");
     client_addr_size = sizeof(struct sockaddr_in);
     check((client_socketfd = accept(in_socketfd, (struct sockaddr *)&client_addr,
-                           (socklen_t *)&client_addr_size))
-                                    == -1,
-                    "accept failed.\n");
+             (socklen_t *)&client_addr_size))
+        == -1,
+      "accept failed.\n");
     handle_connection(client_socketfd);
   }
 
@@ -231,16 +231,15 @@ in4_socket(struct in_addr *sin4_addr, in_port_t sin4_port)
   int in4_socketfd;
 
   check(
-                  (in4_socketfd = socket(AF_INET, SOCK_STREAM, 0)) == -1,
-                  "ipv4: socket creation failed.\n");
+    (in4_socketfd = socket(AF_INET, SOCK_STREAM, 0)) == -1, "ipv4: socket creation failed.\n");
 
   check(
-                  setsockopt(
-                                  in4_socketfd,
-                                  SOL_SOCKET,
-                                  SO_REUSEADDR | SO_REUSEPORT,
-                                  &opt, sizeof(opt)),
-                  "ipv4: socket option setting failed.\n");
+    setsockopt(
+      in4_socketfd,
+      SOL_SOCKET,
+      SO_REUSEADDR | SO_REUSEPORT,
+      &opt, sizeof(opt)),
+    "ipv4: socket option setting failed.\n");
 
   struct sockaddr_in in4_sockaddr;
   in4_sockaddr.sin_family = AF_INET;
@@ -248,11 +247,11 @@ in4_socket(struct in_addr *sin4_addr, in_port_t sin4_port)
   memcpy(&in4_sockaddr.sin_addr, sin4_addr, sizeof(sin4_addr));
 
   check(
-                  bind(
-                                  in4_socketfd,
-                                  (struct sockaddr *)&in4_sockaddr,
-                                  sizeof(in4_sockaddr)),
-                  "ipv4: bind failed.\n");
+    bind(
+      in4_socketfd,
+      (struct sockaddr *)&in4_sockaddr,
+      sizeof(in4_sockaddr)),
+    "ipv4: bind failed.\n");
 
   check(listen(in4_socketfd, SERVER_BACKLOG), "ipv4: listen failed.\n");
 
@@ -266,26 +265,26 @@ in6_socket(struct in6_addr *sin6_addr, in_port_t sin6_port)
   int in6_socketfd;
 
   check(
-                  (in6_socketfd = socket(AF_INET6, SOCK_STREAM, 0)) == -1,
-                  "ipv6: socket creation failed.\n");
+    (in6_socketfd = socket(AF_INET6, SOCK_STREAM, 0)) == -1,
+    "ipv6: socket creation failed.\n");
 
   check(
-                  setsockopt(
-                                  in6_socketfd,
-                                  SOL_SOCKET,
-                                  SO_REUSEADDR | SO_REUSEPORT,
-                                  &opt,
-                                  sizeof(opt)),
-                  "ipv6: socket option setting failed.\n");
+    setsockopt(
+      in6_socketfd,
+      SOL_SOCKET,
+      SO_REUSEADDR | SO_REUSEPORT,
+      &opt,
+      sizeof(opt)),
+    "ipv6: socket option setting failed.\n");
 
   check(
-                  setsockopt(
-                                  in6_socketfd,
-                                  IPPROTO_IPV6,
-                                  IPV6_V6ONLY,
-                                  &opt,
-                                  sizeof(opt)),
-                  "ipv6: socket protocol level option setting failed.\n");
+    setsockopt(
+      in6_socketfd,
+      IPPROTO_IPV6,
+      IPV6_V6ONLY,
+      &opt,
+      sizeof(opt)),
+    "ipv6: socket protocol level option setting failed.\n");
 
   struct sockaddr_in6 in6_sockaddr;
   in6_sockaddr.sin6_family = AF_INET6;
@@ -295,11 +294,11 @@ in6_socket(struct in6_addr *sin6_addr, in_port_t sin6_port)
   in6_sockaddr.sin6_addr = in6addr_any;
 
   check(
-                  bind(
-                                  in6_socketfd,
-                                  (struct sockaddr *)&in6_sockaddr,
-                                  sizeof(in6_sockaddr)),
-                  "ipv6: bind failed.\n");
+    bind(
+      in6_socketfd,
+      (struct sockaddr *)&in6_sockaddr,
+      sizeof(in6_sockaddr)),
+    "ipv6: bind failed.\n");
 
   check(listen(in6_socketfd, SERVER_BACKLOG), "ipv6: listen failed.\n");
 
@@ -393,8 +392,8 @@ handle_sin6_addr(struct in6_addr *out, char *optarg)
     return 0;
   else if (status == 0) {
     fprintf(stderr,
-                    "source6: does not contain a character string representing a "
-                    "valid network address.\n");
+      "source6: does not contain a character string representing a "
+      "valid network address.\n");
     return OPTION_ERROR;
   } else {
     perror("source6");
@@ -430,12 +429,12 @@ void
 printf_version()
 {
   static const char *version_text = PACKAGE_STRING
-                  "\nCopyright (c) 2024 pavroto\n"
-                  "MIT License"
-                  "\n"
-                  "This is free software; you are free to change and redistribute it.\n"
-                  "There is NO WARRANTY, to the extent permitted by law.\n"
-                  "More information here: <https://mit-license.org/>\n";
+    "\nCopyright (c) 2024 pavroto\n"
+    "MIT License"
+    "\n"
+    "This is free software; you are free to change and redistribute it.\n"
+    "There is NO WARRANTY, to the extent permitted by law.\n"
+    "More information here: <https://mit-license.org/>\n";
 
   printf(version_text);
 }
