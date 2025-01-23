@@ -63,7 +63,7 @@ http_cache_get(http_response_t *response)
 }
 
 int
-http_status_entry_bsearch(const char *out, const int *key, const struct http_status_entry list[], size_t count)
+http_status_entry_bsearch(char *out, const int *key, const struct http_status_entry list[], size_t count)
 {
   size_t left = 0;
   size_t right = count - 1;
