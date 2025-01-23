@@ -23,8 +23,6 @@
 
 #define S_EQ(a, b) (strcmp(a, b) == 0)
 
-typedef struct http_request HTTP_REQ;
-
 enum LONG_OPTS {
   OPT_LOG_LEVEL = 1,
   OPT_LOG_OUTPUT,
@@ -218,7 +216,7 @@ main(int argc, char *argv[])
 int
 handle_connection(int client_socketfd)
 {
-  HTTP_REQ *http_client_request = (HTTP_REQ *)malloc(sizeof(HTTP_REQ));
+  http_request_t *http_client_request = (http_request_t *)malloc(sizeof(http_request_t));
   http_parse_request(http_client_request, client_socketfd);
   free(http_client_request);
   return 0;
