@@ -25,7 +25,7 @@ check(int exp, const char *msg)
 }
 
 int
-http_parse_request(struct http_request *out, int socketfd)
+http_parse_request(http_request_t *out, int socketfd)
 {
   char buffer[4096];
   int msgsize = 0;
@@ -45,19 +45,19 @@ http_parse_request(struct http_request *out, int socketfd)
 }
 
 int
-http_construct_response(struct http_response *out, struct http_request *request)
+http_construct_response(http_response_t *out, http_request_t *request)
 {
   return -1;
 }
 
 int
-http_cache_set(struct http_response *response)
+http_cache_set(http_response_t *response)
 {
   return -1;
 }
 
 int
-http_cache_get(struct http_response *response)
+http_cache_get(http_response_t *response)
 {
   return -1;
 }
