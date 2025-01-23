@@ -6,7 +6,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include <http_core.h>
+#include "http_core.h"
 
 struct http_status_entry {
   int code;
