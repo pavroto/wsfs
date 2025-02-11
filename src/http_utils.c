@@ -8,6 +8,10 @@
 
 #include "http_core.h"
 
+// note: rfc2068:2.2
+#define CR 13 // Carriage return
+#define LF 10 // Linefeed
+
 struct http_status_entry {
   int code;
   char msg[HTTP_STATUS_STRING_LENGTH_MAX];
@@ -25,16 +29,45 @@ check(int exp, const char *msg)
 }
 
 int
+http_fill_request_buffer(char* buffer, size_t size, ssize_t msgsize, int socketfd)
+{
+  return 0;
+}
+
+int
 http_parse_request(http_request_t *out, int socketfd)
 {
-  char buffer[4096];
+  // http_parse_request(): 
+  // Read data stream from `socketfd` and define a `http_request_t` at `out` location.
+  //
+  // Caller is expected to allocate and free memory pointed to by `out` pointer.
+  
+  if (out == NULL)
+  {
+    // TODO: use logging function. It is a critical server error.
+    // so it is going to be sth like 5xx http response status 
+    // and will produce an EMERG/ALERT/CRIT (?) log.
+    return -1;
+  }
+
+  if (socketfd <= 0)
+  {
+    // TODO: use logging function. It is a critical server error.
+    // so it is going to be sth like 5xx http response status 
+    // and will produce an EMERG/ALERT/CRIT (?) log.
+    return -1;
+  }
+
+  const size_t buffer_max = 4096;
+  
+  char buffer[buffer_max];
   int msgsize = 0;
   ssize_t bytes_read;
 
   int i = 0;
   while ((bytes_read = read(socketfd, buffer + msgsize, sizeof(buffer) - msgsize - 1)) > 0) {
     msgsize += bytes_read;
-    if (msgsize > 4095 || buffer[msgsize - 1] == '\n')
+    if (msgsize > buffer_max-1 || buffer[msgsize - 1] == '\n')
       break;
   }
 
