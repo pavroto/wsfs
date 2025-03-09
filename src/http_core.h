@@ -3,6 +3,12 @@
 #ifndef _HTTP_CORE
 #define _HTTP_CORE
 
+#include <stdint.h>
+#include <stddef.h>
+
+#include "wsfs_core.h"
+
+
 #define HTTP10 10 // HTTP 1.0
 #define HTTP11 11 // HTTP 1.1
 #define HTTP20 20 // HTTP 2.0
@@ -219,38 +225,48 @@
 #define HTTP_BODY_LENGTH_MAX 8192
 #define HTTP_STATUS_STRING_LENGTH_MAX 128
 
+#define CR 13 // Carriage return
+#define LF 10 // Linefeed
+
+// GENERAL HTTP TYPES //
+typedef uint8_t               http_version_t;
+typedef uint8_t               http_method_t;
+typedef uint16_t              http_status_code_t;
+
 typedef struct {
-  int version;
-  int method;
-  char path[HTTP_PATH_MAX];
+  http_status_code_t          code;
+  wsfs_str_t                  code_string;
+} http_status_t;
 
-  struct {
-    char name[HTTP_HEADERS_LENGTH_MAX];
-    char key[HTTP_HEADERS_LENGTH_MAX];
-  } headers[HTTP_HEADERS_MAX];
-  size_t header_count;
+typedef struct {
+  wsfs_str_t                  name;
+  wsfs_str_t                  value;
+} http_header_t;
 
-  char* body;
+typedef struct {
+  http_header_t               *headers;
+  size_t                      header_count;
+} http_header_collection_t;
+
+// HTTP REQUEST //
+typedef struct {
+  http_version_t              version;
+  http_method_t               method;
+  wsfs_str_t                  path;
+
+  http_header_collection_t    headers;
+
+  wsfs_str_t                  body;
 } http_request_t;
 
+// HTTP RESPONSE //
 typedef struct {
-  int version;
-  int status;
-  char status_string[HTTP_STATUS_STRING_LENGTH_MAX];
+  http_version_t              version;
+  http_status_t               status;
 
-  struct {
-    char name[HTTP_HEADERS_LENGTH_MAX];
-    char key[HTTP_HEADERS_LENGTH_MAX];
-  } response_headers[HTTP_HEADERS_MAX];
-  size_t response_header_count;
+  http_header_collection_t    headers;
 
-  struct {
-    char name[HTTP_HEADERS_LENGTH_MAX];
-    char key[HTTP_HEADERS_LENGTH_MAX];
-  } representation_headers[HTTP_HEADERS_MAX];
-  size_t representation_header_count;
-
-  char* body;
+  wsfs_str_t                  body;
 } http_response_t;
 
 #endif

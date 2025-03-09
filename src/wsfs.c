@@ -16,6 +16,7 @@
 #include "http_core.h"
 #include "http_utils.h"
 #include "log_levels.h"
+#include "logger.h"
 
 #define DEF_PORT 8080
 #define OPTION_ERROR 1
