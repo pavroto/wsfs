@@ -67,10 +67,6 @@ static int verbose_flag;
 static int help_flag;
 static int version_flag;
 
-// Log options
-static int log_level = LOGL_WARN;
-static char log_output[PATH_MAX];
-
 // IPv4 options
 static int sin4_only_flag = 0;
 static struct in_addr sin4_addr = { .s_addr = INADDR_ANY };

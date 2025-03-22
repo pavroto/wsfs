@@ -1,11 +1,19 @@
+#include <linux/limits.h>
 #include <stdio.h>
-#include <time.h>
+#include <unistd.h>
 
 #include "log_levels.h"
+
+int log_level = LOGL_WARN;
+char log_output[PATH_MAX];
 
 int
 logger(int level, char *msg)
 {
+  if (level > log_level)
+    return -1;
+
   fprintf(stderr, "%s", msg);
-  return -1;
+  return 0;
 }
+
