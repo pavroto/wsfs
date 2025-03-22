@@ -49,12 +49,12 @@ void printf_help();
 void printf_version();
 
 // Option handling functions
-int handle_log_level(int *out, char *optarg);
-int handle_log_output(char *out, char *optarg);
-int handle_sin4_addr(struct in_addr *out, char *optarg);
-int handle_sin_port(in_port_t *out, char *optarg);
-int handle_sin6_addr(struct in6_addr *out, char *optarg);
-int handle_target(char *out, char *optarg);
+int handle_log_level(int *out, char *argument);
+int handle_log_output(char *out, char *argument);
+int handle_sin4_addr(struct in_addr *out, char *argument);
+int handle_sin_port(in_port_t *out, char *argument);
+int handle_sin6_addr(struct in6_addr *out, char *argument);
+int handle_target(char *out, char *argument);
 
 static int check(int exp, const char *msg);
 
@@ -198,7 +198,6 @@ main(int argc, char *argv[])
 
   struct sockaddr_in client_addr;
   while (1) {
-    printf("Hello!\n");
     client_addr_size = sizeof(struct sockaddr_in);
     check((client_socketfd = accept(in_socketfd, (struct sockaddr *)&client_addr,
              (socklen_t *)&client_addr_size))
@@ -220,7 +219,7 @@ handle_connection(int client_socketfd)
 }
 
 int
-in4_socket(struct in_addr *sin4_addr, in_port_t sin4_port)
+in4_socket(struct in_addr *in4_addr, in_port_t in4_port)
 {
   int opt = 1;
   int in4_socketfd;
@@ -238,8 +237,8 @@ in4_socket(struct in_addr *sin4_addr, in_port_t sin4_port)
 
   struct sockaddr_in in4_sockaddr;
   in4_sockaddr.sin_family = AF_INET;
-  in4_sockaddr.sin_port = htons(sin4_port);
-  memcpy(&in4_sockaddr.sin_addr, sin4_addr, sizeof(sin4_addr));
+  in4_sockaddr.sin_port = htons(in4_port);
+  memcpy(&in4_sockaddr.sin_addr, in4_addr, sizeof(struct in_addr));
 
   check(
     bind(
@@ -312,40 +311,40 @@ check(int exp, const char *msg)
 }
 
 int
-handle_log_level(int *out, char *optarg)
+handle_log_level(int *out, char *argument)
 {
   // Supported arguments
   // Numeric: 0-7
   // Keyword: EMERG, ALERT, CRIT, ERROR, WARN, NOTICE, INFO, DEBUG
   // More info in loglevels.h
 
-  if (strlen(optarg) == 1 && isdigit(optarg[0]) && optarg[0] - '0' < 8) {
-    *out = optarg[0] - '0';
+  if (strlen(argument) == 1 && isdigit(argument[0]) && argument[0] - '0' < 8) {
+    *out = argument[0] - '0';
     return 0;
   }
 
-  if (S_EQ(optarg, LOGL_STRING_EMERG)) {
+  if (S_EQ(argument, LOGL_STRING_EMERG)) {
     *out = LOGL_EMERG;
     return 0;
-  } else if (S_EQ(optarg, LOGL_STRING_ALERT)) {
+  } else if (S_EQ(argument, LOGL_STRING_ALERT)) {
     *out = LOGL_ALERT;
     return 0;
-  } else if (S_EQ(optarg, LOGL_STRING_CRIT)) {
+  } else if (S_EQ(argument, LOGL_STRING_CRIT)) {
     *out = LOGL_CRIT;
     return 0;
-  } else if (S_EQ(optarg, LOGL_STRING_ERROR)) {
+  } else if (S_EQ(argument, LOGL_STRING_ERROR)) {
     *out = LOGL_ERROR;
     return 0;
-  } else if (S_EQ(optarg, LOGL_STRING_WARN)) {
+  } else if (S_EQ(argument, LOGL_STRING_WARN)) {
     *out = LOGL_WARN;
     return 0;
-  } else if (S_EQ(optarg, LOGL_STRING_NOTICE)) {
+  } else if (S_EQ(argument, LOGL_STRING_NOTICE)) {
     *out = LOGL_NOTICE;
     return 0;
-  } else if (S_EQ(optarg, LOGL_STRING_INFO)) {
+  } else if (S_EQ(argument, LOGL_STRING_INFO)) {
     *out = LOGL_INFO;
     return 0;
-  } else if (S_EQ(optarg, LOGL_STRING_DEBUG)) {
+  } else if (S_EQ(argument, LOGL_STRING_DEBUG)) {
     *out = LOGL_DEBUG;
     return 0;
   } else
@@ -353,25 +352,25 @@ handle_log_level(int *out, char *optarg)
 }
 
 int
-handle_log_output(char *out, char *optarg)
+handle_log_output(char *out, char *argument)
 {
-  if (realpath(optarg, out) == NULL)
+  if (realpath(argument, out) == NULL)
     return OPTION_ERROR;
   return 0;
 }
 
 int
-handle_sin4_addr(struct in_addr *out, char *optarg)
+handle_sin4_addr(struct in_addr *out, char *argument)
 {
-  if (inet_aton(optarg, out) == 0)
+  if (inet_aton(argument, out) == 0)
     return OPTION_ERROR;
   return 0;
 }
 
 int
-handle_sin_port(in_port_t *out, char *optarg)
+handle_sin_port(in_port_t *out, char *argument)
 {
-  int temp = atoi(optarg);
+  int temp = atoi(argument);
   if (temp <= 0 || temp > UINT16_MAX)
     return OPTION_ERROR;
 
@@ -380,10 +379,10 @@ handle_sin_port(in_port_t *out, char *optarg)
 }
 
 int
-handle_sin6_addr(struct in6_addr *out, char *optarg)
+handle_sin6_addr(struct in6_addr *out, char *argument)
 {
   int status;
-  if ((status = inet_pton(AF_INET6, optarg, out)) == 1)
+  if ((status = inet_pton(AF_INET6, argument, out)) == 1)
     return 0;
   else if (status == 0) {
     fprintf(stderr,
@@ -397,10 +396,10 @@ handle_sin6_addr(struct in6_addr *out, char *optarg)
 }
 
 int
-handle_target(char *out, char *optarg)
+handle_target(char *out, char *argument)
 {
   char temp[PATH_MAX];
-  if (realpath(optarg, temp) == NULL)
+  if (realpath(argument, temp) == NULL)
     return OPTION_ERROR;
   return 0;
 }
