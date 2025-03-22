@@ -3,7 +3,9 @@
 #ifndef _WSFS_CORE
 #define _WSFS_CORE
 
-#define WSFS_STR_T_CHAR(A) { .len=sizeof(A), .string=A }
+#include <stdlib.h>
+
+#define WSFS_STR_T_CHAR(A) { .len=strlen(A), .string=A }
 
 typedef struct {
   size_t  len;
