@@ -21,7 +21,7 @@ check(int exp, const char *msg)
 }
 
 int
-http_fill_request_buffer(char* buffer, size_t size, ssize_t msgsize, int socketfd)
+http_fill_request_buffer(char *buffer, size_t size, ssize_t msgsize, int socketfd)
 {
   return 0;
 }
@@ -29,29 +29,27 @@ http_fill_request_buffer(char* buffer, size_t size, ssize_t msgsize, int socketf
 int
 http_parse_request(http_request_t *out, int socketfd)
 {
-  // http_parse_request(): 
+  // http_parse_request():
   // Read data stream from `socketfd` and define a `http_request_t` at `out` location.
   //
   // Caller is expected to allocate and free memory pointed to by `out` pointer.
-  
-  if (out == NULL)
-  {
+
+  if (out == NULL) {
     // TODO: use logging function. It is a critical server error.
-    // so it is going to be sth like 5xx http response status 
+    // so it is going to be sth like 5xx http response status
     // and will produce an EMERG/ALERT/CRIT (?) log.
     return -1;
   }
 
-  if (socketfd <= 0)
-  {
+  if (socketfd <= 0) {
     // TODO: use logging function. It is a critical server error.
-    // so it is going to be sth like 5xx http response status 
+    // so it is going to be sth like 5xx http response status
     // and will produce an EMERG/ALERT/CRIT (?) log.
     return -1;
   }
 
   const size_t buffer_max = 4096;
-  
+
   char buffer[buffer_max];
 
   int msgsize = 0;
@@ -60,7 +58,7 @@ http_parse_request(http_request_t *out, int socketfd)
   int i = 0;
   while ((bytes_read = read(socketfd, buffer + msgsize, sizeof(buffer) - msgsize - 1)) > 0) {
     msgsize += bytes_read;
-    if (msgsize > buffer_max-1 || buffer[msgsize - 1] == '\n')
+    if (msgsize > buffer_max - 1 || buffer[msgsize - 1] == '\n')
       break;
   }
 
@@ -91,15 +89,30 @@ http_cache_get(http_response_t *response)
 int
 http_status_bsearch(wsfs_str_t *out, const http_status_code_t *key, const http_status_t list[], size_t count)
 {
-  size_t left = 0;
-  size_t right = count - 1;
-  size_t middle;
+  // ssize_t is used instead of size_t to prevent underflow in case if status code is missing.
+  ssize_t left = 0;
+  ssize_t right = count - 1;
+  ssize_t middle;
 
   while (left <= right) {
     middle = (left + right) / 2;
+    printf("middle: %ld", middle);
 
     if (list[middle].code == *key) {
-      strncpy(out, list[middle].string, HTTP_STATUS_STRING_LENGTH_MAX);
+      size_t desired_size = strlen(list[middle].code_string.string);
+
+      if (desired_size >= out->len)
+      {
+        if (out->string != NULL)
+          free(out->string);
+
+        out->string = (char*)malloc(desired_size + 1);
+      }
+
+      strncpy(out->string, list[middle].code_string.string, list[middle].code_string.len);
+      out->string[desired_size] = '\0';
+      out->len = desired_size;
+
       return 0;
     }
 
@@ -113,17 +126,14 @@ http_status_bsearch(wsfs_str_t *out, const http_status_code_t *key, const http_s
 }
 
 int
-http_status_string_get(char *out, int status)
+http_status_string_get(wsfs_str_t *out, http_status_code_t status)
 {
-
-#define WSFS_STR_T_CHAR(A) { .len=sizeof(A), .string=A }
-
   //! IMPORTANT
   //! This struct MUST BE ASCENDINGLY SORTED by .code
   static http_status_t http_status_list[] = {
     // Info 1xx
-    { INFO_CONTINUE, WSFS_STR_T_CHAR(INFO_CONTINUE_STRING) }, 
-    { INFO_SWITCH_PROTOCOLS, WSFS_STR_T_CHAR(INFO_SWITCH_PROTOCOLS_STRING) },  
+    { INFO_CONTINUE, WSFS_STR_T_CHAR(INFO_CONTINUE_STRING) },
+    { INFO_SWITCH_PROTOCOLS, WSFS_STR_T_CHAR(INFO_SWITCH_PROTOCOLS_STRING) },
     { INFO_PROCESSING, WSFS_STR_T_CHAR(INFO_PROCESSING_STRING) },
     { INFO_EARLY_HINTS, WSFS_STR_T_CHAR(INFO_EARLY_HINTS_STRING) },
 
