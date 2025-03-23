@@ -253,7 +253,7 @@ in4_socket(struct in_addr *in4_addr, in_port_t in4_port)
 }
 
 int
-in6_socket(struct in6_addr *sin6_addr, in_port_t sin6_port)
+in6_socket(struct in6_addr *in6_addr, in_port_t sin6_port)
 {
   int opt = 1;
   int in6_socketfd;
