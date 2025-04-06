@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include <linux/limits.h>
 #include <stdio.h>
 #include <string.h>
